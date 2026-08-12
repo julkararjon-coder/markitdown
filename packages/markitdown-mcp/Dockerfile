@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN rm -rf /var/lib/apt/lists/*
 
 COPY . /app
-RUN pip --no-cache-dir install /app /app/packages/markitdown-mcp
+RUN pip --no-cache-dir install /app/packages/markitdown /app/packages/markitdown-mcp
 
 WORKDIR /workdir
 
@@ -25,4 +25,4 @@ ARG GROUPID=nogroup
 
 USER $USERID:$GROUPID
 
-ENTRYPOINT [ "markitdown-mcp" ]
+ENTRYPOINT [ "python", "-m", "markitdown_mcp" ]

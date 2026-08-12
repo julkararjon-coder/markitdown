@@ -5,24 +5,25 @@ ENV EXIFTOOL_PATH=/usr/bin/exiftool
 ENV FFMPEG_PATH=/usr/bin/ffmpeg
 ENV MARKITDOWN_ENABLE_PLUGINS=True
 
-# Runtime dependency
-# NOTE: Add any additional MarkItDown plugins here
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     ffmpeg \
-    exiftool
+    exiftool && \
+    rm -rf /var/lib/apt/lists/*
 
-# Cleanup
-RUN rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
 COPY . /app
-RUN pip --no-cache-dir install /app/packages/markitdown /app/packages/markitdown-mcp
+
+RUN pip --no-cache-dir install \
+    /app/packages/markitdown \
+    /app/packages/markitdown-mcp
 
 WORKDIR /workdir
 
-# Default USERID and GROUPID
 ARG USERID=nobody
 ARG GROUPID=nogroup
 
 USER $USERID:$GROUPID
 
-ENTRYPOINT [ "python", "-m", "markitdown_mcp" ]
+ENTRYPOINT ["markitdown-mcp"]

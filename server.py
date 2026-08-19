@@ -53,7 +53,7 @@ async def token(request):
     return JSONResponse({"access_token": "public-token", "token_type": "bearer", "expires_in": 31536000})
 
 async def proxy_mcp(request):
-    url = f"http://127.0.0.1:{INTERNAL_PORT}/mcp"
+    url = f"http://127.0.0.1:{INTERNAL_PORT}/mcp/"
     body = await request.body()
     async with httpx.AsyncClient(timeout=60) as client:
         resp = await client.request(

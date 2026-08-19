@@ -9,4 +9,6 @@ RUN pip install --root-user-action=ignore \
     ./packages/markitdown \
     ./packages/markitdown-mcp
 
+RUN sed -i 's/stateless=True/stateless=False/' /usr/local/lib/python3.13/site-packages/markitdown_mcp/__main__.py
+
 CMD ["python", "server.py"]

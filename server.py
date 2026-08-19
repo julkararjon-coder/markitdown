@@ -11,13 +11,20 @@ INTERNAL_PORT = 3001
 PUBLIC_PORT = int(os.environ.get("PORT", 10000))
 
 # Start the real markitdown-mcp server internally
-subprocess.Popen([
-    "markitdown-mcp", "--http",
-    "--host", "127.0.0.1",
-    "--port", str(INTERNAL_PORT)
-])
-time.sleep(2)
+import threading
 
+def run_markitdown_forever():
+    while True:
+        proc = subprocess.Popen([
+            "markitdown-mcp", "--http",
+            "--host", "127.0.0.1",
+            "--port", str(INTERNAL_PORT)
+        ])
+        proc.wait()  # blocks until it crashes/exits
+        time.sleep(1)  # then restarts it
+
+threading.Thread(target=run_markitdown_forever, daemon=True).start()
+time.sleep(2)
 async def oauth_metadata(request):
     base = str(request.base_url).rstrip("/")
     return JSONResponse({
